@@ -18,7 +18,7 @@ k = int(input())
 s = open("input.txt").read()
 if len(s) == 0:
     print("файл пустой")
-with open("input.txt", "r") as file:
+with open("input.txt", "UTF-8") as file:
     current_number = ""
     while True:
         block = file.read()  # Чтение блока из файла
