@@ -1,9 +1,5 @@
-"""
-Написать программу, которая читая символы из бесконечной последовательности (эмулируется конечным файлом, читающимся поблочно), распознает, преобразует и выводит на экран лексемы по определенному правилу. Лексемы разделены пробелами. Преобразование делать по возможности через словарь. 
-Для упрощения под выводом числа прописью подразумевается последовательный вывод всех цифр числа.
-Регулярные выражения использовать нельзя.Натуральные числа. Выводит на экран нечетные числа, переведя их К-ичную систему счисления (К<10). Минимальное число выводится прописью.
-"""
-def convert_to_base_k(number, k):
+# -*- coding: utf-8 -*-
+def convert_to_base_k(number, k): # функция для перевода в k - ую систему счисления
     result = ""
     while number > 0:
         digit = number % k
@@ -11,18 +7,30 @@ def convert_to_base_k(number, k):
         number = number // k
     return int(result)
 
-numbers_dict = {0: "ноль", 1: "один", 2: "два", 3: "три", 4: "четыре", 5: "пять", 6: "шесть", 7: "семь", 8: "восемь", 9: "девять"}
+def check_text(s):
+    flag = True
+    for i in s:
+        if i in "123456789":
+            flag = False
+            break
+    return flag
 
-f = True
-k = int(input())
-s = open("input.txt").read()
+
+numbers_dict = {0: "ноль", 1: "один", 2: "два", 3: "три", 4: "четыре", 5: "пять", 6: "шесть", 7: "семь", 8: "восемь", 9: "девять"}
+sp = [] # список чисел в k - ой системе счисления
+k = int(input("Введите K-ую (K < 10) систему счисления: "))
+s = open("text.txt").read()
 if len(s) == 0:
-    print("файл пустой")
-with open("input.txt", encoding='utf-8') as file:
+    print("Файл пустой, попробуйте ещё раз!")
+if check_text(s):
+    print("В файле отсутствуют числа, попробуйте ещё раз!")
+with open("text.txt", encoding='utf-8') as file:
     current_number = ""
     while True:
         block = file.read()  # Чтение блока из файла
+        #print(block, "block")
         if not block:  # Если блок пустой, файл закончился
+            #print('пусто')
             break
         for char in block:
             if char.isdigit():  # Если символ является цифрой, добавляем его к текущему числу
@@ -33,10 +41,15 @@ with open("input.txt", encoding='utf-8') as file:
                     if number % 2 != 0:   # Если число нечетное
                         # Переводим число в К-ичную систему счисления и выводим его прописью
                         base_k_number = convert_to_base_k(number, k)
-                        digits = [int(digit) for digit in str(base_k_number)]
-                        lexemes = [numbers_dict[digit] for digit in digits]
-                        print(" ".join(lexemes))
-                    current_number = ""
+                        digits = [int(digit) for digit in str(base_k_number)] # список цифр числа
+                        lexemes = [numbers_dict[digit] for digit in digits] # слова цифр
+                        #print(" ".join(lexemes))
+                        rez = ""
+                        for j in digits:
+                            rez += str(j)
+                        sp.append(int(rez))
+                        print(rez, "число в k-ой системе счисления")
+                    current_number = "" # обнуляем, для дальнейшей работы с другими числами
     # Проверяем последнее число после окончания файла
     if current_number != "":
         number = int(current_number)
@@ -45,5 +58,14 @@ with open("input.txt", encoding='utf-8') as file:
             digits = [int(digit) for digit in str(base_k_number)]
             lexemes = [numbers_dict[digit] for digit in digits]
             mn = min(digits)
-            print(*digits)
-            print(numbers_dict[mn])
+            #print(mn)
+            rez = ""
+            for _ in digits:
+                rez += str(_)
+            sp.append(int(rez))
+            print(rez, "число в k-ой системе счисления")
+            minimal = str(min(sp))
+            rez = ""
+            for i in minimal:
+                rez += numbers_dict[int(i)] + " "
+            print(f"Минимальное число: {rez}")
