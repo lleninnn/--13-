@@ -86,14 +86,14 @@ for i in B:
 # Количество нулей в подматрице E в области 4 в нечётных столбцах
 for i in range(middle_n):
     for j in range(middle_n):
-        if (i <= j) and ((i + j + 1) <= middle_n) and ((j + 1) % 2 != 0):
+        if (i < j) and i < ((middle_n - 1 - j)) and ((j + 1) % 2 != 0):
             if E[i][j] == 0:
                 num_zero += 1
 
 # Вычисление суммы чисел в подматрице E в области 4 в нечётных строках
 for i in range(middle_n):
     for j in range(middle_n):
-        if (i <= j) and ((i + j + 1) >= middle_n) and ((i + 1) % 2 != 0):
+        if (i < j) and i < ((middle_n - 1 - j)) and ((i + 1) % 2 != 0):
             sum_ += E[i][j]
 
 # Замена областей 1 и 2 симметрично в подматрице E
@@ -101,9 +101,9 @@ if num_zero > sum_:
     print(f'\nВ подматрице "E" количество нулей в нечётных столбцах в области 4({num_zero})')
     print(f'больше чем сумма чисел в нечётных строках в области 1({sum_})')
     print('поэтому симметрично меняем местами области 1 и 2 в подматрице E.')
-    for i in range(middle_n - 1, ceil(middle_n / 2) - 1, -1):
-        for j in range(i):
-            if (i + j + 1) >= middle_n:
+    for i in range(middle_n - 1, 0, -1):
+        for j in range(1,i+1):
+            if i > (middle_n - 1 - j):
                 E[i][j], E[j][i] = E[j][i], E[i][j]
     if N % 2 == 1:
         for i in range(middle_n - 1, N):
@@ -122,18 +122,18 @@ else:
     C, E = E, C
     if N % 2 == 1:
         for i in range(middle_n - 1, N):  # Перезаписываем С
-            for j in range(middle_n):
-                F[i][j] = C[i - (middle_n - 1)][j]
+            for j in range(middle_n-1,N):
+                F[i][j] = C[i - (middle_n - 1)][j- (middle_n - 1)]
         for i in range(middle_n):  # Перезаписываем Е
             for j in range(middle_n - 1, N):
                 F[i][j] = E[i][j - (middle_n - 1)]
     else:
         for i in range(middle_n, N):
-            for j in range(middle_n):
-                F[i][j] = C[i - middle_n][j]
+            for j in range(middle_n,N):
+                F[i][j] = C[i - middle_n][j - middle_n] # Перезаписываем С
         for i in range(0, middle_n):
             for j in range(middle_n, N):
-                F[i][j] = E[i][j - middle_n]
+                F[i][j] = E[i][j - middle_n] # Перезаписываем E
 
 # K * AT
 for i in range(N):
