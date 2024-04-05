@@ -45,43 +45,16 @@ for i in range(N):
         AT[i][j] = A[j][i]
 
 # Разбиваем матрицу А на 4 равных подматрицы
-size = N // 2
-parity = True if len(A) % 2 == 0 else False
-D = []
-E = []
-C = []
-B = []
-for i in range(0, len(A)):
-  if i == size and parity == False: continue
-  rowLeft = []
-  rowRight = []
-  for j in range(0, len(A[i])):
-    if j == size and parity == False: continue
-    if j < size: rowLeft.append(A[i][j])
-    else: rowRight.append(A[i][j])
-  if i < size:
-    D.append(rowLeft)
-    E.append(rowRight)
-  else:
-    C.append(rowLeft)
-    B.append(rowRight)
-
-# Вывод матрицы D
-print("Матрица D:")
-for i in D:
-    print(i)
-# Вывод матрицы E
-print("Матрица E:")
-for i in E:
-    print(i)
-# Вывод матрицы C
-print("Матрица C:")
-for i in C:
-    print(i)
-# Вывод матрицы B
-print("Матрица B:")
-for i in B:
-    print(i)
+if N % 2 == 1:
+    E = [A[i][middle_n - 1:N] for i in range(middle_n)]
+    C = [A[i][0:middle_n] for i in range(middle_n - 1, N)]
+    B = [A[i][middle_n - 1:N] for i in range(middle_n - 1, N)]
+    D = [A[i][0:middle_n] for i in range(middle_n)]
+else:
+    E = [A[i][middle_n:N] for i in range(0, middle_n)]
+    C = [A[i][0:middle_n] for i in range(middle_n, N)]
+    B = [A[i][middle_n:N] for i in range(middle_n, N)]
+    D = [A[i][0:middle_n] for i in range(0, middle_n)]
 
 # Количество нулей в подматрице E в области 4 в нечётных столбцах
 for i in range(middle_n):
