@@ -24,7 +24,7 @@ G = np.tri(N) * A # Матрица G
 
 num_zero = 0 # Количество нулей в подматрице E в нечётных столбцах
 sum_ = 0 # Сумма чисел в подматрице E в нечётных строках
-
+sum_ele_F = 0
 # Вывод матрицы А
 print(f'\nМатрица А:\n{A}')
 
@@ -97,3 +97,11 @@ else:
         for i in range(0, middle_n):
             for j in range(middle_n, N):
                 F[i][j] = E[i][j - middle_n]  # Перезаписываем Е
+
+print(f'\nМатрица F:\n{F}')
+# Сумма диагональных элементов матрицы F
+for i in range(N):
+    for j in range(N):
+        if i == j:
+            sum_ele_F += F[i][j]
+print(sum_ele_F)
