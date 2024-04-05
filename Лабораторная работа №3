@@ -57,13 +57,13 @@ else:
 
 # Количество нулей в подматрице E в области 4 в нечётных столбцах
 for i in range(middle_n):
-    for j in range(middle_n):
+    for j in range(1,middle_n):
         if (i < j) and i < ((middle_n - 1 - j)) and ((j + 1) % 2 != 0):
             if E[i][j] == 0:
                 num_zero += 1
 
 # Вычисление суммы чисел в подматрице E в области 4 в нечётных строках
-for i in range(middle_n):
+for i in range(1,middle_n):
     for j in range(middle_n):
         if (i < j) and i < ((middle_n - 1 - j)) and ((i + 1) % 2 != 0):
             sum_ += E[i][j]
