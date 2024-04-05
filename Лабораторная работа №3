@@ -36,7 +36,7 @@ F = A.copy()  # Задаём матрицу F
 AF = [[0 for i in range(N)] for j in range(N)]  # Результат умножения матрицы A на матрицу F
 KAF = [[0 for i in range(N)] for j in range(N)]  # Результат умножения матрицы AF на коэффициент K
 KAT = [[0 for i in range(N)] for j in range(N)]  # Результат умножения матрицы AT на коэффициент K
-result = [[0 for i in range(N)] for j in range(N)] # Результат вычитания матриц
+rez = [[0 for i in range(N)] for j in range(N)] # Результат вычитания матриц
 
 # Транспонируем матрицу А
 for i in range(N):
@@ -126,7 +126,7 @@ for i in range(N):
 # KFA - KAT
 for i in range(N):
     for j in range(N):
-        result[i][j] = KAF[i][j] - KAT[i][j]
+        rez[i][j] = KAF[i][j] - KAT[i][j]
 
 # Вывод всех операций и полученной матрицы
 print("Матрица AT:")
@@ -150,5 +150,5 @@ for i in KAF:
     print(i)
 
 print("Результат К * (F * А) – K * AT:")
-for i in result:
+for i in rez:
     print(i)
