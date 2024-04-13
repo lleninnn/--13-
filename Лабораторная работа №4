@@ -153,9 +153,9 @@ plt.ylabel("y")
 plt.grid()
 plt.show()
 
-plt.title("соответсвие номера и квадрата элемента из третьего столбца ")
+plt.title("Визуализация матрицы F через график ")
 plt.xlabel("x")
 plt.ylabel("y")
 plt.grid()
-plt.plot(range(0,N),F[2],linestyle="-",color="red") # Обычный график
+n, bin, patches = plt.hist(F, bins=20) # Гистограмма
 plt.show()
