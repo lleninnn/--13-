@@ -158,5 +158,4 @@ plt.xlabel("x")
 plt.ylabel("y")
 plt.grid()
 plt.plot(range(0,N),F[2],linestyle="-",color="red") # Обычный график
-
 plt.show()
