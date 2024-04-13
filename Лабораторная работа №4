@@ -147,7 +147,7 @@ plt.bar(range(0,N),F[1],color='blue',alpha=0.9) # Столбчатая диаг�
 plt.show()
 
 plt.title("Зависимость y = sin от элементов F, x = соs от элементов F")
-plt.plot(np.cos(F),np.sin(F),linestyle="-",color="blue") # Обычный график
+plt.plot(np.cos(F),np.sin(F),linestyle="-",color="blue") # Линейный график
 plt.xlabel("x")
 plt.ylabel("y")
 plt.grid()
