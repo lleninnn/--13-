@@ -8,7 +8,6 @@ import time
 import matplotlib.pyplot as plt
 from functools import lru_cache
 k = 1 # Ответ пользователя
-
 # Факториал
 def factor(number):
     if number == 1:
@@ -38,7 +37,7 @@ def F_iter(n):
     G = [0]*(n+1)
     G[1] = 1
     for i in range(2, n+1):
-        F[i] = ((-1)**i) * (F[i-1] - 2*G[i-1])/(factor(2*i+3))
+        F[i] = ((-1)**i) * (F[i-1] - 2*G[i-1])//(factor(2*i+3))
         G[i] = F[i-1]
     return F[n], G[n]
 
@@ -86,7 +85,7 @@ if o == 1 and k == 1:
         end = time.time()
         timer.append(end - start)
         iter_times = end - start
-        print('№',i,"Результат рекурсии = ",result,"\nВремя выполнения = ",end-start,"\n\n")
+        print('№',i,"Результат итерации = ",result,"\nВремя выполнения = ",end-start,"\n\n")
     # Графики
     plt.plot(graf, timer, label='Итерационная функция.')
     plt.legend(loc=2)
