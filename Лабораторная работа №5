@@ -8,40 +8,54 @@ import time
 import matplotlib.pyplot as plt
 from functools import lru_cache
 k = 1 # Ответ пользователя
-# Факториал
-def factor(number):
+p = 1 # Переменная для определения знака
+
+# Факториал для рекурсии
+def rec_factor(number):
     if number == 1:
         return 1
     else:
-        return number * factor(number-1)
+        return number * rec_factor(number-1)
 
 # Нахождение F рекурсивно
 lru_cache(maxsize=None)
-def F_rec(n):
+def F_rec(n,p):
     if n == 1:
         return 1
     else:
-        return ((-1)**n) * (F_rec(n-1) - 2*G_rec(n-1))/(factor(2*n+3))
+        p *= -1
+        return p * (F_rec(n-1,p) - 2*G_rec(n-1,p))/(rec_factor(2*n+3))
 
 # Нахождение G рекурсивно
 lru_cache(maxsize=None)
-def G_rec(n):
+def G_rec(n,p):
     if n == 1:
         return 1
     else:
-        return F_rec(n-1)
+        return F_rec(n-1,p)
+
+# Факториал для итерации
+@lru_cache(maxsize=None)
+def it_factor(n):
+    res = n
+    for i in range(1,n):
+        res = res * (i+1)
+    return res
+
 # Нахождение F и G итерационно
 def F_iter(n):
     F = [0]*(n+1)
     F[1] = 1
     G = [0]*(n+1)
     G[1] = 1
+    p = 1
     for i in range(2, n+1):
-        F[i] = ((-1)**i) * (F[i-1] - 2*G[i-1])//(factor(2*i+3))
+        F[i] = p * (F[i-1] - 2*G[i-1])//(it_factor(2*i+3))
         G[i] = F[i-1]
+        p *= -1
     return F[n], G[n]
 
-# Ввод числа N и выбор выполнения программы
+# Ввод числа N и S
 n = int(input('Введите натуральное число n, для функции: F(n < 2) = 100; F(n) = -(F(n - 1) + F(n - 5)): '))
 while n < 1:
     n = int(input('Введите число n больше 0. Рассматривается только последовательность натуральных чисел: '))
@@ -55,10 +69,12 @@ timer=[]
 timer_rec=[]
 graf = list(range(1, n + 1,s))
 
+# Выбор выполнения программы
 o = int(input('\nДля какой функции вы хотите выполнить программу? '
                   '( Рекурсивной = 0 | Итерационной = 1 | Для обеих = 2 ): '))
 while o != 0 and o != 1 and o != 2:
     o = int(input('\nПринимаются только значения "0", "1" или "2": '))
+
 # Вычисление времени + Графики
 if (n >=  33 and (o == 0 or o == 2)) or (n >= 5000 and (o == 1 or o == 2)):
     k = int(input('\nЧисло n слишком большое. Работа программы может занять существенное время.'
@@ -69,7 +85,7 @@ if (n >=  33 and (o == 0 or o == 2)) or (n >= 5000 and (o == 1 or o == 2)):
 if o == 0 and k == 1:
     for i in graf:
         start = time.time()
-        res = F_rec(i)
+        res = F_rec(i,p)
         end = time.time()
         timer.append(end-start)
         rec_times = end - start
@@ -97,7 +113,7 @@ if o == 2 and k == 1:
         end = time.time()
         timer.append(end-start)
         start_rec = time.time()
-        res = F_rec(i)
+        res = F_rec(i,p)
         end_rec = time.time()
         timer_rec.append(end_rec-start_rec)
         rec_times = end_rec-start_rec
