@@ -18,7 +18,7 @@ def rec_factor(number):
         return number * rec_factor(number-1)
 
 # Нахождение F рекурсивно
-lru_cache(maxsize=128)
+lru_cache(maxsize=None)
 def F_rec(n,p):
     if n == 1:
         return 1
@@ -27,7 +27,7 @@ def F_rec(n,p):
         return p * (F_rec(n-1,p) - 2*G_rec(n-1,p))/(rec_factor(2*n+3))
 
 # Нахождение G рекурсивно
-lru_cache(maxsize=128)
+lru_cache(maxsize=None)
 def G_rec(n,p):
     if n == 1:
         return 1
@@ -35,7 +35,7 @@ def G_rec(n,p):
         return F_rec(n-1,p)
 
 # Факториал для итерации
-@lru_cache(maxsize=128)
+@lru_cache(maxsize=None)
 def it_factor(n):
     res = n
     for i in range(1,n):
