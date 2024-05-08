@@ -3,12 +3,12 @@
 # Результаты сравнительного исследования времени вычисления представить в табличной и графической форме в виде отчета по лабораторной работе.
 
 # Вариант 17
-# F(1) = 1; G(1) = 1; F(n) = (-1)n*(F(n–1) – 2*G(n–1))/(2n+3)!, G(n) = F(n–1) , при n >=2
+# F(1) = 1; G(1) = 1; F(n) = (-1)n*(F(n–1) – 2*G(n–1))/(2n)!, G(n) = F(n–1) , при n >=2
 import time
 import matplotlib.pyplot as plt
 from functools import lru_cache
 k = 1 # Ответ пользователя
-p = 1 # Переменная для определения знака
+p = 1
 
 # Факториал для рекурсии
 def rec_factor(number):
@@ -18,39 +18,42 @@ def rec_factor(number):
         return number * rec_factor(number-1)
 
 # Нахождение F рекурсивно
-lru_cache(maxsize=None)
-def F_rec(n,p):
+p = 1
+@lru_cache(maxsize=None)
+def F_rec(n):
     if n == 1:
         return 1
     else:
+        global p
         p *= -1
-        return p * (F_rec(n-1,p) - 2*G_rec(n-1,p))/(rec_factor(2*n+3))
+        return p * (F_rec(n-1) - 2*G_rec(n-1))/(rec_factor(2*n))
 
 # Нахождение G рекурсивно
-lru_cache(maxsize=None)
-def G_rec(n,p):
+@lru_cache(maxsize=None)
+def G_rec(n):
     if n == 1:
         return 1
     else:
-        return F_rec(n-1,p)
+        return F_rec(n-1)
 
 # Факториал для итерации
 @lru_cache(maxsize=None)
 def it_factor(n):
-    res = n
-    for i in range(1,n):
-        res = res * (i+1)
-    return res
+    s = 1
+    for i in range(2,n+1):
+        s *= i
+    return s
 
 # Нахождение F и G итерационно
+p = 1
 def F_iter(n):
     F = [0]*(n+1)
     F[1] = 1
     G = [0]*(n+1)
     G[1] = 1
-    p = 1
+    global p
     for i in range(2, n+1):
-        F[i] = p * (F[i-1] - 2*G[i-1])//(it_factor(2*i+3))
+        F[i] = p * (F[i-1] - 2*G[i-1])//(it_factor(2*i))
         G[i] = F[i-1]
         p *= -1
     return F[n], G[n]
@@ -85,7 +88,7 @@ if (n >=  33 and (o == 0 or o == 2)) or (n >= 5000 and (o == 1 or o == 2)):
 if o == 0 and k == 1:
     for i in graf:
         start = time.time()
-        res = F_rec(i,p)
+        res = F_rec(i)
         end = time.time()
         timer.append(end-start)
         rec_times = end - start
@@ -113,7 +116,7 @@ if o == 2 and k == 1:
         end = time.time()
         timer.append(end-start)
         start_rec = time.time()
-        res = F_rec(i,p)
+        res = F_rec(i)
         end_rec = time.time()
         timer_rec.append(end_rec-start_rec)
         rec_times = end_rec-start_rec
@@ -123,6 +126,10 @@ if o == 2 and k == 1:
     plt.plot(graf, timer, label='Итерационная функция.')
     plt.plot(graf, timer_rec, label='Рекусионная функция.')
     plt.legend(loc=2)
+
+if k == 0:
+    print('\nРабота программы завершена.')
+    quit()
 
 plt.xlabel('Значение n')
 plt.ylabel('Время выполнения (c)')
