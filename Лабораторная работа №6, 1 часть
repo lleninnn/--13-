@@ -22,10 +22,11 @@ stop_time = time.time()
 if K < 5:
     print("Вариантов создания квинтетов нет.")
 else:
+    print("Алгоритмический подход:")
     print("Возможные варианты квинтетов:")
     for quin in quintets:
         print(quin)
-print("Время выполнения алгоритмического варианта:", stop_time - start_time)
+    print("Время выполнения алгоритмического варианта:", stop_time - start_time)
 
 # Вариант с помощью функций Python
 inst = list(range(1,K+1)) # Cписок инструментов
@@ -33,6 +34,10 @@ inst = list(range(1,K+1)) # Cписок инструментов
 start_time = time.time()
 quintets = list(combinations(inst,5))
 end_time = time.time()
-print(quintets)
-
-print("Время выполнения функционального варианта:", end_time - start_time)
+if K < 5:
+    print("Вариантов создания квинтетов нет.")
+else:
+    print("Функциональный подход:")
+    print("Возможные варианты квинтетов:")
+    print(quintets)
+    print("Время выполнения функционального варианта:", end_time - start_time)
