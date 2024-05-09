@@ -1,0 +1,38 @@
+# 1 часть – написать программу в соответствии со своим вариантом задания.
+# Написать 2 варианта формирования (алгоритмический и с помощью функций Питона), сравнив по времени их выполнение.
+# Вариант 17. В филармонии К музыкальных инструментов (музыкантов). Сформировать все возможные варианты квинтетов.
+import time
+from itertools import combinations
+
+K = int(input("Введите количество инструментов: ")) # Кол-во инструментов
+inst = list(range(1,K+1)) # Cписок инструментов
+
+# Вариант алгоритмический
+start_time = time.time()
+quintets = []
+for i in range(K-4):
+    for j in range(i+1,K-3):
+        for k in range(j+1,K-2):
+            for l in range(k+1,K-1):
+                for m in range(l+1,K):
+                    quintet = [inst[i], inst[j], inst[k], inst[l], inst[m]]
+                    quintets.append(quintet)
+stop_time = time.time()
+
+if K < 5:
+    print("Вариантов создания квинтетов нет.")
+else:
+    print("Возможные варианты квинтетов:")
+    for quin in quintets:
+        print(quin)
+print("Время выполнения алгоритмического варианта:", stop_time - start_time)
+
+# Вариант с помощью функций Python
+inst = list(range(1,K+1)) # Cписок инструментов
+
+start_time = time.time()
+quintets = list(combinations(inst,5))
+end_time = time.time()
+print(quintets)
+
+print("Время выполнения функционального варианта:", end_time - start_time)
