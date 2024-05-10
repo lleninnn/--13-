@@ -5,39 +5,48 @@ import time
 from itertools import combinations
 
 K = int(input("Введите количество инструментов: ")) # Кол-во инструментов
-inst = list(range(1,K+1)) # Cписок инструментов
+M = 5 # Квинтет
 
 # Вариант алгоритмический
-start_time = time.time()
-quintets = []
-for i in range(K-4):
-    for j in range(i+1,K-3):
-        for k in range(j+1,K-2):
-            for l in range(k+1,K-1):
-                for m in range(l+1,K):
-                    quintet = [inst[i], inst[j], inst[k], inst[l], inst[m]]
-                    quintets.append(quintet)
-stop_time = time.time()
-
-if K < 5:
+start_time = time.time() # Начало времени
+def quintet(M,K):
+    quintets = []
+    for i in range(M):
+        quintets.append(i)
+    quintets.append(K)
+    quintets.append(0)
+    while True:
+        print(quintets[0:M])
+        for j in range(len(quintets)-1):
+            if quintets[j]+1 == quintets[j+1]:
+                quintets[j] = j
+            else:
+                break
+        if j < M:
+            quintets[j] += 1
+        else:
+            break
+stop_time = time.time() # Конец времени
+if K < M:
+    print("Алгоритмический подход:")
     print("Вариантов создания квинтетов нет.")
 else:
     print("Алгоритмический подход:")
     print("Возможные варианты квинтетов:")
-    for quin in quintets:
-        print(quin)
+    quintet(M,K)
     print("Время выполнения алгоритмического варианта:", stop_time - start_time)
 
 # Вариант с помощью функций Python
-inst = list(range(1,K+1)) # Cписок инструментов
+inst = list(range(0,K)) # Cписок инструментов
 
-start_time = time.time()
-quintets = list(combinations(inst,5))
-end_time = time.time()
-if K < 5:
+start_time = time.time() # Начало времени
+quintets_f = list(combinations(inst,M))
+end_time = time.time() # Конец времени
+if K < M:
+    print("Функциональный подход:")
     print("Вариантов создания квинтетов нет.")
 else:
     print("Функциональный подход:")
     print("Возможные варианты квинтетов:")
-    print(quintets)
+    print(quintets_f)
     print("Время выполнения функционального варианта:", end_time - start_time)
