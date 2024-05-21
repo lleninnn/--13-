@@ -3,10 +3,9 @@
 # ...и целевую функцию для нахождения оптимального  решения.
 # Написать 2 варианта формирования (алгоритмический и с помощью функций Питона), сравнив по времени их выполнение.
 # Вариант 17. В филармонии К музыкальных инструментов (музыкантов). Сформировать все возможные варианты квинтетов.
-# Целевая функция: найти оптимальное сочетание инструментов для формирования квинтетов.
-
 import time
 from itertools import combinations
+import random
 
 K = int(input("Введите количество инструментов: ")) # Кол-во инструментов
 M = 5 # Квинтет
@@ -44,6 +43,7 @@ def quintet(M, K):
             break
 
 stop_time = time.time() # Конец времени
+
 if K <= M:
     print("Алгоритмический подход:")
     print("Вариантов создания квинтетов нет.")
@@ -83,14 +83,33 @@ stop_time = time.time()
 print("Время выполнения алгоритмического варианта:", stop_time - start_time, "cек.")
 
 
+# Целевая функция: Вывод максимального ценника квинтета
 def calculate_price(quintet):
-    count_strun = len([instr for instr in quintet if instr == 2])  # Количество струнных инструментов в квинтете
-    count_dux = len([instr for instr in quintet if instr == 5])  # Количество духовых инструментов в квинтете
-    price = count_strun + count_dux  # Простой пример оценки: цена = общее количество струнных и духовых инструментов
+    count_strun = len([instr for instr in quintet if instr == 2])
+    count_dux = len([instr for instr in quintet if instr == 5])
+    if count_strun == 0 or count_dux == 0:
+        price = random.randint(400,700)
+    else:
+        price = random.randint(900,1200)
     return price
 
 
-print("\nРасчет цен на квинтеты:")
+print("\nРассчитывание стоимости квинтетов:")
+prices = {}
+max_price = 0
+max_price_quintet = None
 for quintet in valid_quintets:
     price = calculate_price(quintet)
-    print(f"Квинтет {quintet}: Цена = {price}")
+    prices[quintet] = price
+    if price > max_price:
+        max_price = price
+        max_price_quintet = quintet
+if not valid_quintets:
+    print(f"Цены нет")
+
+for quintet, price in prices.items():
+    if valid_quintets:
+        print(f"Квинтет {quintet}: Цена = {price}")
+
+if valid_quintets:
+    print(f"Самый дорогой квинтет : {max_price_quintet}. Его цена составляет {max_price}")
