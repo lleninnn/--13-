@@ -81,3 +81,16 @@ else:
     print(valid_quintets)
 stop_time = time.time()
 print("Время выполнения алгоритмического варианта:", stop_time - start_time, "cек.")
+
+
+def calculate_price(quintet):
+    count_strun = len([instr for instr in quintet if instr == 2])  # Количество струнных инструментов в квинтете
+    count_dux = len([instr for instr in quintet if instr == 5])  # Количество духовых инструментов в квинтете
+    price = count_strun + count_dux  # Простой пример оценки: цена = общее количество струнных и духовых инструментов
+    return price
+
+
+print("\nРасчет цен на квинтеты:")
+for quintet in valid_quintets:
+    price = calculate_price(quintet)
+    print(f"Квинтет {quintet}: Цена = {price}")
