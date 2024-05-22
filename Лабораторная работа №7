@@ -3,6 +3,45 @@
 
 from tkinter import *
 from tkinter import ttk
+import tkinter as tk
 import random
-import time
+import timeit
 from itertools import combinations
+
+
+
+# Алгоритмический подход
+def quintet():
+    M = 5  # Квинтет
+    K = int(txt_input.get())
+    start_time = timeit.timeit()  # Начало времени
+    quintets = []
+    for i in range(M):
+        quintets.append(i)
+    quintets.append(K)
+    quintets.append(0)
+
+    def check_quintet(quintet):
+        strun = 0
+        dux = 0
+        for element in quintet:
+            if element == 2:
+                strun += 1
+            elif element == 5:
+                dux += 1
+        return strun >= 1 and dux >= 1
+
+    while True:
+        if check_quintet(quintets[0:M]):
+            print(quintets[0:M])
+        for j in range(len(quintets) - 1):
+            if quintets[j] + 1 == quintets[j + 1]:
+                quintets[j] = j
+            else:
+                break
+        if j < M:
+            quintets[j] += 1
+        else:
+            break
+    stop_time = timeit.timeit()
+    output_text.delete('1.0', tk.END)  # Очистить текстовое поле перед выводом
