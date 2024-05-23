@@ -9,39 +9,45 @@ import timeit
 from itertools import combinations
 
 
+def quintetik():
+    M = 5
+    K = int(vvod.get())
+    # Вариант с помощью функций Python(усложнённый)
+    def quintet(M, K):
+        def check_quintet(quintet):
+            strun_instr = False
+            dux_instr = False
+            for instr in quintet:
+                if instr in [2]:  # Проверка на струнный инструмент
+                    strun_instr = True
+                if instr in [5]:  # Проверка на духовой инструмент
+                    dux_instr = True
+            return strun_instr and dux_instr
 
-# Алгоритмический подход
-def quintet():
-    M = 5  # Квинтет
-    K = int(txt_input.get())
-    start_time = timeit.timeit()  # Начало времени
-    quintets = []
-    for i in range(M):
-        quintets.append(i)
-    quintets.append(K)
-    quintets.append(0)
+        quintets = list(combinations(range(K), M))
+        valid_quintets = [q for q in quintets if check_quintet(q)]
 
-    def check_quintet(quintet):
-        strun = 0
-        dux = 0
-        for element in quintet:
-            if element == 2:
-                strun += 1
-            elif element == 5:
-                dux += 1
-        return strun >= 1 and dux >= 1
+        return valid_quintets
 
-    while True:
-        if check_quintet(quintets[0:M]):
-            print(quintets[0:M])
-        for j in range(len(quintets) - 1):
-            if quintets[j] + 1 == quintets[j + 1]:
-                quintets[j] = j
-            else:
-                break
-        if j < M:
-            quintets[j] += 1
-        else:
-            break
-    stop_time = timeit.timeit()
-    output_text.delete('1.0', tk.END)  # Очистить текстовое поле перед выводом
+
+
+root = tk.Tk() # Cоздание окна
+root.title("Квинтеты") # Название программы
+root.geometry('720x480+100+200') # Разрешение
+root.resizable(False, False)
+
+label_1 = tk.Label(root, text='Введите кол-во инструментов (К)',font=('Times New Roman',15,'bold')).grid(row=0,column=0,pady = 5, padx = 10) # Текст
+
+vvod = tk.Entry(root).grid(row=0,column= 1) # Поле ввода
+
+btn1 = tk.Button(root,text='Вычислить',command= quintetik).grid(row=1,column= 1,pady = 5) # Кнопка
+
+vivod = tk.Text(root,width=40,height=20) # Окно вывода
+vivod.grid(row=2,column=1,pady = 5)
+
+scroll = Scrollbar(root,orient=VERTICAL) # Скроллбар
+scroll.grid(row=2, column=3, sticky=NS)
+vivod.config(yscrollcommand=scroll.set)
+scroll.config(command=vivod.yview)
+
+root.mainloop() # Запуск цикла
