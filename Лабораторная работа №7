@@ -34,7 +34,7 @@ def combi():
 
         while True:
             if check_quintet(quintets[0:M]):
-                vivod.insert("1.0",f'{quintets[0:M]}\n\n\n')
+                vivod.insert(END,f'{quintets[0:M]}\n\n\n')
             for j in range(len(quintets) - 1):
                 if quintets[j] + 1 == quintets[j + 1]:
                     quintets[j] = j
@@ -48,13 +48,13 @@ def combi():
     stop_time = time.time()  # Конец времени
 
     if K <= M:
-        vivod.insert("1.0","Алгоритмический подход:\n\n\n")
-        vivod.insert("1.0","Вариантов создания квинтетов нет.\n\n\n")
+        vivod.insert(END,"Алгоритмический подход:\n\n\n")
+        vivod.insert(END,"Вариантов создания квинтетов нет.\n\n\n")
     else:
-        vivod.insert("1.0","Алгоритмический подход:\n\n\n")
-        vivod.insert("1.0","Возможные варианты квинтетов:\n\n\n")
+        vivod.insert(END,"Алгоритмический подход:\n\n\n")
+        vivod.insert(END,"Возможные варианты квинтетов:\n\n\n")
         quintet(M, K)
-        vivod.insert("1.0",f'Время выполнения алгоритмического варианта: {stop_time - start_time}, cек.\n\n\n')
+        vivod.insert(END,f'Время выполнения алгоритмического варианта: {stop_time - start_time}, cек.\n\n\n')
 
     # Вариант с помощью функций Python(усложнённый)
     def quintet(M, K):
@@ -73,16 +73,16 @@ def combi():
 
         return valid_quintets
 
-    vivod.insert("1.0","Функциональный подход:\n\n\n")
+    vivod.insert(END,"Функциональный подход:\n\n\n")
     start_time = time.time()
     valid_quintets = quintet(M, K)
     if not valid_quintets:
-        vivod.insert("1.0","Вариантов создания квинтетов нет.\n\n\n")
+        vivod.insert(END,"Вариантов создания квинтетов нет.\n\n\n")
     else:
-        vivod.insert("1.0","Возможные варианты квинтетов:\n\n\n")
-        vivod.insert("1.0", f'{str(valid_quintets)}\n\n\n' )
+        vivod.insert(END,"Возможные варианты квинтетов:\n\n\n")
+        vivod.insert(END, f'{str(valid_quintets)}\n\n\n' )
     stop_time = time.time()
-    vivod.insert("1.0","Время выполнения алгоритмического варианта:", stop_time - start_time, "cек.\n\n\n")
+    vivod.insert(END,"Время выполнения алгоритмического варианта:", stop_time - start_time, "cек.\n\n\n")
 
     # Целевая функция: Вывод максимального ценника квинтета
     def calculate_price(quintet):
@@ -94,7 +94,7 @@ def combi():
             price = random.randint(900, 1200)
         return price
 
-    vivod.insert("1.0","\nРассчитывание стоимости квинтетов:\n\n\n")
+    vivod.insert(END,"\nРассчитывание стоимости квинтетов:\n\n\n")
     prices = {}
     max_price = 0
     max_price_quintet = None
@@ -105,14 +105,14 @@ def combi():
             max_price = price
             max_price_quintet = quintet
     if not valid_quintets:
-        vivod.insert("1.0","Цены нет\n\n\n")
+        vivod.insert(END,"Цены нет\n\n\n")
 
     for quintet, price in prices.items():
         if valid_quintets:
-            vivod.insert("1.0",f"Квинтет {quintet}: Цена = {price}\n\n\n")
+            vivod.insert(END,f"Квинтет {quintet}: Цена = {price}\n\n\n")
 
     if valid_quintets:
-        vivod.insert("1.0",f"Самый дорогой квинтет : {max_price_quintet}. Его цена составляет {max_price}\n\n\n")
+        vivod.insert(END,f"Самый дорогой квинтет : {max_price_quintet}. Его цена составляет {max_price}\n\n\n")
 
 
 root = tk.Tk() # Cоздание окна
