@@ -8,7 +8,7 @@ import random
 import time
 from itertools import combinations
 
-def delete_editor():
+def delete_clean(): # Функция для очистки текста
     vivod.delete('1.0','end')
 def combi():
     K = int(vvod.get()) # Кол-во инструментов
@@ -118,24 +118,24 @@ def combi():
 root = tk.Tk() # Cоздание окна
 root.title("Квинтеты") # Название программы
 root.geometry('720x480+100+200') # Разрешение
-root.resizable(False, False)
+root.resizable(False, False) #  Константы для изменения разрешения окна
 
 label_1 = tk.Label(root, text='Введите кол-во инструментов (К)',font=('Times New Roman',15,'bold')).grid(row=0,column=0,pady = 5, padx = 10) # Текст
 
-vvod = (tk.Entry(root))
-vvod.grid(row=0,column= 1) # Поле ввода
+vvod = (tk.Entry(root)) # Поле ввода
+vvod.grid(row=0,column= 1)
 
-btn1 = tk.Button(root,text='Вычислить',command= combi).grid(row=1,column= 1,pady = 5) # Кнопка
+btn1 = tk.Button(root,text='Вычислить',command= combi).grid(row=1,column= 1,pady = 5) # Кнопка вычисления
 
-vivod = tk.Text(root,width=60,height=23) # Окно вывода
+vivod = tk.Text(root,width=68,height=23) # Окно вывода
 vivod.place(x=150, y=100)
 
 scroll = Scrollbar(root,orient=VERTICAL) # Скроллбар
-scroll.place(x=635,y=100,height=370)
+scroll.place(x=685,y=100,height=370)
 vivod.config(yscrollcommand=scroll.set)
 scroll.config(command=vivod.yview)
 
-clean = ttk.Button(root,text = "Сброс",cursor="pirate",command=delete_editor)
-clean.place(x=40,y=54)
+clean = tk.Button(root,text = "Очистить",command=delete_clean,pady = 5) # Кнопка очистки
+clean.place(x=70,y=100)
 
 root.mainloop() # Запуск цикла
