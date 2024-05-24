@@ -5,13 +5,57 @@ from tkinter import *
 from tkinter import ttk
 import tkinter as tk
 import random
-import timeit
+import time
 from itertools import combinations
 
+def delete_editor():
+    vivod.delete('1.0','end')
+def combi():
+    K = int(vvod.get()) # Кол-во инструментов
+    M = 5  # Квинтет
+    # Вариант алгоритмический (усложнённый)
+    start_time = time.time()  # Начало времени
+    def quintet(M, K):
+        quintets = []
+        for i in range(M):
+            quintets.append(i)
+        quintets.append(K)
+        quintets.append(0)
 
-def quintetik():
-    M = 5
-    K = int(vvod.get())
+        def check_quintet(quintet):
+            strun = 0
+            dux = 0
+            for element in quintet:
+                if element == 2:
+                    strun += 1
+                elif element == 5:
+                    dux += 1
+            return strun >= 1 and dux >= 1
+
+        while True:
+            if check_quintet(quintets[0:M]):
+                vivod.insert("1.0",f'{quintets[0:M]}\n\n\n')
+            for j in range(len(quintets) - 1):
+                if quintets[j] + 1 == quintets[j + 1]:
+                    quintets[j] = j
+                else:
+                    break
+            if j < M:
+                quintets[j] += 1
+            else:
+                break
+
+    stop_time = time.time()  # Конец времени
+
+    if K <= M:
+        vivod.insert("1.0","Алгоритмический подход:\n\n\n")
+        vivod.insert("1.0","Вариантов создания квинтетов нет.\n\n\n")
+    else:
+        vivod.insert("1.0","Алгоритмический подход:\n\n\n")
+        vivod.insert("1.0","Возможные варианты квинтетов:\n\n\n")
+        quintet(M, K)
+        vivod.insert("1.0",f'Время выполнения алгоритмического варианта: {stop_time - start_time}, cек.\n\n\n')
+
     # Вариант с помощью функций Python(усложнённый)
     def quintet(M, K):
         def check_quintet(quintet):
@@ -29,6 +73,46 @@ def quintetik():
 
         return valid_quintets
 
+    vivod.insert("1.0","Функциональный подход:\n\n\n")
+    start_time = time.time()
+    valid_quintets = quintet(M, K)
+    if not valid_quintets:
+        vivod.insert("1.0","Вариантов создания квинтетов нет.\n\n\n")
+    else:
+        vivod.insert("1.0","Возможные варианты квинтетов:\n\n\n")
+        vivod.insert("1.0", f'{str(valid_quintets)}\n\n\n' )
+    stop_time = time.time()
+    vivod.insert("1.0","Время выполнения алгоритмического варианта:", stop_time - start_time, "cек.\n\n\n")
+
+    # Целевая функция: Вывод максимального ценника квинтета
+    def calculate_price(quintet):
+        count_strun = len([instr for instr in quintet if instr == 2])
+        count_dux = len([instr for instr in quintet if instr == 5])
+        if count_strun == 0 or count_dux == 0:
+            price = random.randint(400, 700)
+        else:
+            price = random.randint(900, 1200)
+        return price
+
+    vivod.insert("1.0","\nРассчитывание стоимости квинтетов:\n\n\n")
+    prices = {}
+    max_price = 0
+    max_price_quintet = None
+    for quintet in valid_quintets:
+        price = calculate_price(quintet)
+        prices[quintet] = price
+        if price > max_price:
+            max_price = price
+            max_price_quintet = quintet
+    if not valid_quintets:
+        vivod.insert("1.0","Цены нет\n\n\n")
+
+    for quintet, price in prices.items():
+        if valid_quintets:
+            vivod.insert("1.0",f"Квинтет {quintet}: Цена = {price}\n\n\n")
+
+    if valid_quintets:
+        vivod.insert("1.0",f"Самый дорогой квинтет : {max_price_quintet}. Его цена составляет {max_price}\n\n\n")
 
 
 root = tk.Tk() # Cоздание окна
@@ -38,16 +122,20 @@ root.resizable(False, False)
 
 label_1 = tk.Label(root, text='Введите кол-во инструментов (К)',font=('Times New Roman',15,'bold')).grid(row=0,column=0,pady = 5, padx = 10) # Текст
 
-vvod = tk.Entry(root).grid(row=0,column= 1) # Поле ввода
+vvod = (tk.Entry(root))
+vvod.grid(row=0,column= 1) # Поле ввода
 
-btn1 = tk.Button(root,text='Вычислить',command= quintetik).grid(row=1,column= 1,pady = 5) # Кнопка
+btn1 = tk.Button(root,text='Вычислить',command= combi).grid(row=1,column= 1,pady = 5) # Кнопка
 
-vivod = tk.Text(root,width=40,height=20) # Окно вывода
-vivod.grid(row=2,column=1,pady = 5)
+vivod = tk.Text(root,width=60,height=23) # Окно вывода
+vivod.place(x=150, y=100)
 
 scroll = Scrollbar(root,orient=VERTICAL) # Скроллбар
-scroll.grid(row=2, column=3, sticky=NS)
+scroll.place(x=635,y=100,height=370)
 vivod.config(yscrollcommand=scroll.set)
 scroll.config(command=vivod.yview)
+
+clean = ttk.Button(root,text = "Сброс",cursor="pirate",command=delete_editor)
+clean.place(x=40,y=54)
 
 root.mainloop() # Запуск цикла
