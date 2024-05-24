@@ -82,7 +82,8 @@ def combi():
         vivod.insert(END,"Возможные варианты квинтетов:\n\n\n")
         vivod.insert(END, f'{str(valid_quintets)}\n\n\n' )
     stop_time = time.time()
-    vivod.insert(END,"Время выполнения алгоритмического варианта:", stop_time - start_time, "cек.\n\n\n")
+    if valid_quintets:
+        vivod.insert(END,"Время выполнения алгоритмического варианта:", stop_time - start_time, "cек.\n\n\n")
 
     # Целевая функция: Вывод максимального ценника квинтета
     def calculate_price(quintet):
