@@ -1,0 +1,10 @@
+from tkinter import *
+from tkinter import filedialog
+import matplotlib.pyplot as plt
+
+
+class Product:
+    def __init__(self, name, category, sales):
+        self.name = name
+        self.category = category
+        self.sales = sales
