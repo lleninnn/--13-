@@ -1,10 +1,128 @@
-from tkinter import *
-from tkinter import filedialog
+import tkinter as tk
+from tkinter import ttk
+import csv
 import matplotlib.pyplot as plt
+import numpy as np
 
 
+# Класс для хранения информации о товаре
 class Product:
-    def __init__(self, name, category, sales):
+    def __init__(self, name, category, price, sales):
         self.name = name
         self.category = category
-        self.sales = sales
+        self.price = float(price)
+        self.sales = int(sales)
+
+    # Метод для сегментирования товаров по категориям
+    @staticmethod
+    def segment_by_category(products):
+        categories = {}
+        for product in products:
+            if product.category not in categories:
+                categories[product.category] = []
+            categories[product.category].append(product)
+        return categories
+
+    # Метод для сегментирования товаров по продажам
+    @staticmethod
+    def segment_by_sales(products):
+        sorted_products = sorted(products, key=lambda x: x.sales, reverse=True)
+        top_products = sorted_products[:10]
+        bottom_products = sorted_products[-10:]
+        middle_products = list(set(sorted_products) - set(top_products))
+        return {"Top": top_products, "Bottom": bottom_products, "Middle": middle_products}
+
+
+# Загрузка данных из CSV-файла
+def load_data():
+    with open('products.csv', 'r') as file:
+        reader = csv.DictReader(file)
+        products = {}
+        for row in reader:
+            products[row['Name']] = Product(row['Name'], row['Category'], row['Price'], row['Sales'])
+    return products
+
+
+# Визуализация сегментации по категориям
+def visualize_segmentation_by_category(categories):
+    labels = ['{}: {}'.format(k, len(v)) for k, v in categories.items()]
+    sizes = [len(v) for _, v in categories.items()]
+    explode = [0.1] * len(labels)
+    fig1, ax1 = plt.subplots()
+    ax1.pie(sizes, explode=explode, labels=labels, autopct='%1.1f%%', startangle=90)
+    ax1.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
+    plt.title("Segmentation by Category")
+    plt.show()
+
+
+# Визуализация сегментации по продажам
+def visualize_segmentation_by_sales(segments):
+    labels = ["Top", "Middle", "Bottom"]
+    sizes = [len(v) for _, v in segments.items()]
+    explode = [0.1, 0, 0]
+    fig2, ax2 = plt.subplots()
+    ax2.pie(sizes, explode=explode, labels=labels, autopct='%1.1f%%', startangle=90)
+    ax2.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
+    plt.title("Segmentation by Sales Volume")
+    plt.show()
+
+
+# Создание окна приложения
+root = tk.Tk()
+root.title("Товары магазина")
+
+# Окно выбора категории
+frame_category = ttk.Frame(root)
+ttk.Label(frame_category, text="Выберите категорию").pack()
+category_menu = ttk.Combobox(frame_category, state="readonly")
+category_menu["values"] = ("Все",) + tuple(load_data().keys())
+category_menu.current(0)
+category_menu.pack()
+ttk.Button(frame_category, text="Показать", command=lambda: show_category(category_menu.get())).pack()
+frame_category.pack()
+
+# Окно выбора объема продаж
+frame_sales = ttk.Frame(root)
+ttk.Label(frame_sales, text="Выберите объем продаж").pack()
+sales_menu = ttk.Combobox(frame_sales, state="readonly")
+sales_menu["values"] = ("Все",) + ('Топ 10', 'Средний', 'Нижние 10')
+sales_menu.current(0)
+sales_menu.pack()
+ttk.Button(frame_sales, text="Показать", command=lambda: show_sales(sales_menu.get())).pack()
+frame_sales.pack()
+
+
+# Функция для отображения выбранной категории
+def show_category(selected_category):
+    if selected_category == "Все":
+        all_products = load_data()
+        data = Product.segment_by_category(all_products)
+        visualize_segmentation_by_category(data)
+    else:
+        filtered_products = [product for product in load_data() if product.category == selected_category]
+        data = Product.segment_by_category(filtered_products)
+        visualize_segmentation_by_category(data)
+
+
+# Функция для отображения выбранного объема продаж
+def show_sales(selected_sales):
+    if selected_sales == "Все":
+        all_products = load_data()
+        data = Product.segment_by_sales(all_products)
+        visualize_segmentation_by_sales(data)
+    elif selected_sales == "Топ 10":
+        top_products = load_data().segment_by_sales(load_data())["Top"]
+        data = Product.segment_by_category(top_products)
+        visualize_segmentation_by_category(data)
+    elif selected_sales == "Средний":
+        middle_products = load_data().segment_by_sales(load_data())["Middle"]
+        data = Product.segment_by_category(middle_products)
+        visualize_segmentation_by_category(data)
+    elif selected_sales == "Нижние 10":
+        bottom_products = load_data().segment_by_sales(load_data())["Bottom"]
+        data = Product.segment_by_category(bottom_products)
+        visualize_segmentation_by_category(data)
+
+
+if __name__ == "__main__":
+    root.mainloop()
