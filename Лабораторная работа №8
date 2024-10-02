@@ -1,10 +1,8 @@
 # Импортируем необходимые модули
 import csv
-from collections import Counter
-import matplotlib.pyplot as plt
 import tkinter as tk
 from tkinter import ttk
-
+import matplotlib.pyplot as plt
 
 # Класс для представления товара
 class Product:
@@ -17,7 +15,6 @@ class Product:
     def __str__(self):
         return f'{self.name}: Категория - {self.category}, Цена - {self.price}'
 
-
 # Функция для чтения данных из CSV файла
 def read_csv_file():
     with open('products.csv', 'r') as file:
@@ -28,7 +25,6 @@ def read_csv_file():
             products.append(product)
         return products
 
-
 # Функция для сегментации товаров по категориям
 def segment_by_categories(products):
     categories = {}
@@ -37,7 +33,6 @@ def segment_by_categories(products):
             categories[product.category] = []
         categories[product.category].append(product)
     return categories
-
 
 # Функция для сегментации товаров по продажам
 def segment_by_sales(products):
@@ -50,6 +45,17 @@ def segment_by_sales(products):
             sales[total_price].append(product)
     return sales
 
+# Функция для сегментации товаров по продажам и последующей визуализации
+def perform_segmentation_by_sales():
+    global sales
+    sales = segment_by_sales(products)
+    visualize_segmentation_by_sales(sales)
+
+# Функция для сегментации товаров по категориям и последующей визуализации
+def perform_segmentation_by_categories():
+    global categories
+    categories = segment_by_categories(products)
+    visualize_segmentation_by_categories(categories)
 
 # Функция для визуализации распределения товаров по категориям
 def visualize_segmentation_by_categories(categories):
@@ -62,7 +68,6 @@ def visualize_segmentation_by_categories(categories):
     plt.title("Сегментация товаров по категориям")
     plt.show()
 
-
 # Функция для визуализации распределения товаров по продажам
 def visualize_segmentation_by_sales(sales):
     values = list(sales.keys())
@@ -73,7 +78,6 @@ def visualize_segmentation_by_sales(sales):
     ax2.axis('equal')  # Для получения равномерной диаграммы
     plt.title("Сегментация товаров по продажам")
     plt.show()
-
 
 # Создаем графический интерфейс с помощью библиотеки tkinter
 root = tk.Tk()
@@ -128,7 +132,6 @@ visualize_sales_button = tk.Button(visualization_sales_frame, text="Показа
                                    command=lambda: visualize_segmentation_by_sales(sales))
 visualize_sales_button.pack(pady=(10, 0))
 
-
 # Функция для загрузки данных из CSV файла
 def load_data():
     global products
@@ -139,21 +142,6 @@ def load_data():
     except FileNotFoundError:
         info_label = ttk.Label(info_frame, text="Файл не найден!")
         info_label.pack()
-
-
-# Функция для сегментации товаров по категориям и последующей визуализации
-def perform_segmentation_by_categories():
-    global categories
-    categories = segment_by_categories(products)
-    visualize_segmentation_by_categories(categories)
-
-
-# Функция для сегментации товаров по продажам и последующей визуализации
-def perform_segmentation_by_sales():
-    global sales
-    sales = segment_by_sales(products)
-    visualize_segmentation_by_sales(sales)
-
 
 # Основной цикл программы
 if __name__ == "__main__":
