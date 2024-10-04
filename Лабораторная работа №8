@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 
 # Класс для представления товара
 class Product:
-    def __init__(self, name, category, price,quantity):
+    def __init__(self, name, category, price, quantity):
         self.name = name
         self.category = category
         self.price = float(price) if price else None
@@ -22,7 +22,7 @@ def read_csv_file():
         reader = csv.DictReader(file)
         products = []
         for row in reader:
-            product = Product(row['Name'], row['Category'], row['Price'],row['Quantity'])
+            product = Product(row['Name'], row['Category'], row['Price'], row['Quantity'])
             products.append(product)
         return products
 
@@ -40,7 +40,7 @@ def segment_by_sales(products):
     sales = {}
     for product in products:
         if product.price is not None:
-            total_sales = product.price * int(product.quantity)
+            total_sales = product.price * product.quantity
             if total_sales not in sales:
                 sales[total_sales] = []
             sales[total_sales].append(product)
@@ -99,8 +99,7 @@ segment_categories_frame.pack(padx=10, pady=10)
 tk.Label(segment_categories_frame, text="Сегментация по категориям").pack()
 
 # Кнопка для запуска сегментации по категориям
-segment_categories_button = tk.Button(segment_categories_frame, text="Выполнить сегментацию",
-                                      command=lambda: perform_segmentation_by_categories())
+segment_categories_button = tk.Button(segment_categories_frame, text="Выполнить сегментацию", command=lambda: perform_segmentation_by_categories())
 segment_categories_button.pack(pady=(10, 0))
 
 # Виджет для отображения результатов сегментации по продажам
@@ -109,8 +108,7 @@ segment_sales_frame.pack(padx=10, pady=10)
 tk.Label(segment_sales_frame, text="Сегментация по продажам").pack()
 
 # Кнопка для запуска сегментации по продажам
-segment_sales_button = tk.Button(segment_sales_frame, text="Выполнить сегментацию",
-                                 command=lambda: perform_segmentation_by_sales())
+segment_sales_button = tk.Button(segment_sales_frame, text="Выполнить сегментацию", command=lambda: perform_segmentation_by_sales())
 segment_sales_button.pack(pady=(10, 0))
 
 # Виджет для отображения круговой диаграммы по категориям
@@ -119,8 +117,7 @@ visualization_categories_frame.pack(padx=10, pady=10)
 tk.Label(visualization_categories_frame, text="Визуализация сегментации по категориям").pack()
 
 # Кнопка для запуска визуализации сегментации по категориям
-visualize_categories_button = tk.Button(visualization_categories_frame, text="Показать диаграмму",
-                                        command=lambda: visualize_segmentation_by_categories(categories))
+visualize_categories_button = tk.Button(visualization_categories_frame, text="Показать диаграмму", command=lambda: visualize_segmentation_by_categories(categories))
 visualize_categories_button.pack(pady=(10, 0))
 
 # Виджет для отображения круговой диаграммы по продажам
@@ -129,8 +126,7 @@ visualization_sales_frame.pack(padx=10, pady=10)
 tk.Label(visualization_sales_frame, text="Визуализация сегментации по продажам").pack()
 
 # Кнопка для запуска визуализации сегментации по продажам
-visualize_sales_button = tk.Button(visualization_sales_frame, text="Показать диаграмму",
-                                   command=lambda: visualize_segmentation_by_sales(sales))
+visualize_sales_button = tk.Button(visualization_sales_frame, text="Показать диаграмму", command=lambda: visualize_segmentation_by_sales(sales))
 visualize_sales_button.pack(pady=(10, 0))
 
 # Функция для загрузки данных из CSV файла
