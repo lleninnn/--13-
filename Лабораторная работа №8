@@ -6,10 +6,11 @@ import matplotlib.pyplot as plt
 
 # Класс для представления товара
 class Product:
-    def __init__(self, name, category, price):
+    def __init__(self, name, category, price,quantity):
         self.name = name
         self.category = category
         self.price = float(price) if price else None
+        self.quantity = int(quantity) if quantity else None
 
     # Метод для вывода информации о товаре
     def __str__(self):
@@ -21,7 +22,7 @@ def read_csv_file():
         reader = csv.DictReader(file)
         products = []
         for row in reader:
-            product = Product(row['Name'], row['Category'], row['Price'])
+            product = Product(row['Name'], row['Category'], row['Price'],row['Quantity'])
             products.append(product)
         return products
 
@@ -39,10 +40,10 @@ def segment_by_sales(products):
     sales = {}
     for product in products:
         if product.price is not None:
-            total_price = product.price * int(product.name[-1])
-            if total_price not in sales:
-                sales[total_price] = []
-            sales[total_price].append(product)
+            total_sales = product.price * int(product.quantity)
+            if total_sales not in sales:
+                sales[total_sales] = []
+            sales[total_sales].append(product)
     return sales
 
 # Функция для сегментации товаров по продажам и последующей визуализации
