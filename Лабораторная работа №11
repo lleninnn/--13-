@@ -1,0 +1,175 @@
+import pygame
+import tkinter as tk
+from tkinter import messagebox
+import time
+import random
+
+# Инициализация Pygame
+pygame.init()
+
+# Настройки окна
+WIDTH, HEIGHT = 600, 600
+screen = pygame.display.set_mode((WIDTH, HEIGHT))
+pygame.display.set_caption("Игра на развитие памяти")
+font = pygame.font.Font(None, 74)
+result_font = pygame.font.Font(None, 50)
+
+# Цвета
+WHITE = (255, 255, 255)
+BLACK = (0, 0, 0)
+GREEN = (0, 255, 0)
+RED = (255, 0, 0)
+
+# Настройка карты
+CARD_SIZE = 100
+MARGIN = 20
+
+# Создание позиций карт
+def create_card_positions():
+    positions = []
+    for i in range(4):
+        for j in range(4):
+            x = MARGIN + j * (CARD_SIZE + MARGIN)
+            y = MARGIN + i * (CARD_SIZE + MARGIN)
+            positions.append((x, y))
+    return positions
+
+positions = create_card_positions()
+
+# Генерация пар
+def generate_pairs():
+    symbols = list(range(8)) * 2
+    random.shuffle(symbols)
+    return symbols
+
+pairs = generate_pairs()
+
+# Класс карты
+class Card:
+    def __init__(self, symbol, position):
+        self.symbol = symbol
+        self.position = position
+        self.rect = pygame.Rect(position[0], position[1], CARD_SIZE, CARD_SIZE)
+        self.revealed = False
+        self.matched = False
+
+    def draw(self, screen):
+        if self.revealed or self.matched:
+            pygame.draw.rect(screen, WHITE, self.rect)
+            text = font.render(str(self.symbol), True, BLACK)
+            screen.blit(text, (self.position[0] + 35, self.position[1] + 25))
+        else:
+            pygame.draw.rect(screen, GREEN, self.rect)
+
+# Создание объектов карты
+cards = [Card(pairs[i], positions[i]) for i in range(16)]
+
+# Игровые переменные
+first_card = None
+second_card = None
+matches = 0
+attempts = 0
+running = True
+game_over = False
+clock = pygame.time.Clock()
+
+# Функция сброса игры
+def reset_game():
+    global pairs, cards, first_card, second_card, matches, attempts, game_over
+    pairs = generate_pairs()
+    cards = [Card(pairs[i], positions[i]) for i in range(16)]
+    first_card = None
+    second_card = None
+    matches = 0
+    attempts = 0
+    game_over = False
+    screen.fill(BLACK)
+    for card in cards:
+        card.revealed = True
+        card.draw(screen)
+    screen.blit(font.render("Запомните пары", True, WHITE), (10, 500))
+    pygame.display.flip()
+    time.sleep(10.0)
+    for card in cards:
+        card.revealed = False
+
+# Показать все карточки в начале
+screen.fill(BLACK)
+for card in cards:
+    card.revealed = True
+    card.draw(screen)
+screen.blit(font.render("Запомните пары", True, WHITE), (10, 500))
+pygame.display.flip()
+
+# Подождите 10 секунд
+time.sleep(10.0)
+
+# Скрыть все карты после первого раскрытия
+for card in cards:
+    card.revealed = False
+
+# Игровой цикл
+while running:
+    screen.fill(BLACK)
+
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+        elif event.type == pygame.MOUSEBUTTONDOWN and not game_over:
+            pos = pygame.mouse.get_pos()
+            for card in cards:
+                if card.rect.collidepoint(pos) and not card.revealed and not card.matched:
+                    card.revealed = True
+                    if first_card is None:
+                        first_card = card
+                    elif second_card is None:
+                        second_card = card
+                        attempts += 1
+                        break  # Выходим из цикла, чтобы не перебирать остальные карты
+
+    # Проверка совпадений
+    if first_card and second_card:
+        if first_card.symbol != second_card.symbol:
+            # Подождать 1 секунду перед тем, как скрыть карты
+            pygame.time.delay(1000)
+            first_card.revealed = False
+            second_card.revealed = False
+        else:
+            first_card.matched = True
+            second_card.matched = True
+            matches += 1
+
+        first_card = None
+        second_card = None
+
+    # Проверка окончания игры
+    if matches == 8:
+        game_over = True
+
+    # Отображение текущего количества попыток
+    attempts_text = font.render(f"Попыток: {attempts}", True, WHITE)
+    screen.blit(attempts_text, (10, 550))
+
+    # Обновление экрана
+    for card in cards:
+        card.draw(screen)
+
+    pygame.display.flip()
+
+    # Ограничение FPS
+    clock.tick(30)
+
+    # Окно результатов
+    if game_over:
+        root = tk.Tk()
+        root.withdraw()
+        result = messagebox.askyesno("Результаты",
+                                     f"Поздравляю! Вы справились за {attempts} попыток.\nХотите сыграть ещё раз?")
+        if result:
+            reset_game()
+        else:
+            running = False
+        root.destroy()
+
+# Завершение программы
+pygame.quit()
